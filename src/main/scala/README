@@ -1,0 +1,4 @@
+1、代码开发环境的要求：
+    本地安装JDK1.8、scala2.10.4、IDEA安装scala插件scala-intellij-bin-2018.1.10.zip
+    pom.xml文件中加入maven-scala-plugin
+2、IDEA下创建带scala代码的Maven项目参考：https://blog.csdn.net/kicilove/article/details/79971966
