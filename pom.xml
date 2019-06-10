@@ -78,6 +78,7 @@
 
     <build>
         <plugins>
+            <!--maven-scala插件-->
             <plugin>
                 <groupId>org.scala-tools</groupId>
                 <artifactId>maven-scala-plugin</artifactId>
@@ -90,6 +91,15 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <!--maven-java插件，指定java版本-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>
