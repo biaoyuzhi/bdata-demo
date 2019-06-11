@@ -1,0 +1,13 @@
+1、pox.xml中加入hbase依赖：
+<dependency>
+  <groupId>org.apache.hbase</groupId>
+  <artifactId>hbase-client</artifactId>
+  <version>2.1.4</version>
+</dependency>
+2、resources下加入集群中的hbase/conf/hbase-site.xml文件
+3、①Project Structure->Artifacts->Add->JAR->From modules with dependencies...后，
+    Main Class选hbase.HBaseDemo，
+    JAR files from libraries选extract to the target JAR，
+    Directory for META-INF/MANIFEST.MF选%PROJECT_PATH%\src\main\resources
+   ②Build->Build Artifacts...->build后找到out目录下的xxx.jar包上传到HBase集群上
+   ③HBase集群上运行java -jar xxx.jar，实现hbase/HBaseDemo.java类的逻辑
