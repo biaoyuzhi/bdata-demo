@@ -56,6 +56,13 @@
             <artifactId>hbase-client</artifactId>
             <version>2.1.4</version>
         </dependency>
+        <!-- MR方式将HDFS中的数据插入到HBase表中 -->
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-mapreduce</artifactId>
+            <version>2.1.4</version>
+        </dependency>
+
 
 
         <!--spark依赖包-->
