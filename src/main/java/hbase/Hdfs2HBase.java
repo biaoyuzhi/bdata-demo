@@ -20,6 +20,8 @@ import java.io.IOException;
 /**
  * Created by wuzh on 2019/6/12.
  * Describe：将HDFS中的数据插入到HBase表中，需要pom.xml中的hbase-mapreduce依赖
+ * 集群上运行，如果抛异常：Exception in thread "main" java.lang.NoClassDefFoundError: org/apache/hadoop/hbase/HBaseConfiguration
+ * 解决办法：在系统环境变量文件.profile中添加export HADOOP_CLASSPATH=$HBASE_HOME/lib/hbase-*.jar
  */
 public class Hdfs2HBase {
     //Mapper逻辑

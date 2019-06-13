@@ -16,7 +16,7 @@ object SparkKafkaDemo {
       .setAppName("SparkKafkaDemo")         //不指定运行环境，留给提交时指定--master
       .set("spark.streaming.stopGracefullyOnShutdown", "true")    //设置优雅退出
       .set("spark.default.parallelism","6")
-    val sc = new SparkContext()
+    val sc = new SparkContext(conf)
     sc.setLogLevel("ERROR")
     val ssc = new StreamingContext(sc,Seconds(10))  //设置批次时间，批处理间隔时间
     //offset保存路径，会保存在hdfs路径上
