@@ -18,9 +18,19 @@ object SparkKafkaDemo {
       .set("spark.default.parallelism","6")
     val sc = new SparkContext(conf)
     sc.setLogLevel("ERROR")
+    //todo 如果程序异常退出再重启，kafka中间产生的数据要想正常读取，这里需要先删除checkpointDir文件夹再重启该程序，暂不明原因
+    val checkpointDir = "/kafka-checkpoint"
+    val ssc = StreamingContext.getOrCreate(checkpointDir,()=>createStreaming(sc,checkpointDir))
+    //启动
+    ssc.start()
+    //保持运行
+    ssc.awaitTermination()
+  }
+
+  def createStreaming(sc: SparkContext,checkpointDir: String): StreamingContext = {
     val ssc = new StreamingContext(sc,Seconds(10))  //设置批次时间，批处理间隔时间
     //offset保存路径，会保存在hdfs路径上
-    ssc.checkpoint("/kafka-checkpoint")
+    ssc.checkpoint(checkpointDir)
     //读取kafka数据
     val kafkaParams = Map(
       "bootstrap.servers" -> "192.168.92.60:9092",
@@ -59,9 +69,7 @@ object SparkKafkaDemo {
     streamWebSocket.map(_.value()).map(line => {
       line.substring(0,10)+"@"+line.substring(14,22)+"@"+line.substring(27,41)+"@"+line.substring(line.indexOf(" - ") + 3)
     }).foreachRDD(rdd => if (!rdd.isEmpty()) rdd.saveAsTextFile("hdfs://hadoop72:9820/websocket/"+UUID.randomUUID().toString().replaceAll("-","")))
-    //启动
-    ssc.start()
-    //保持运行
-    ssc.awaitTermination()
+    ssc
   }
+
 }
