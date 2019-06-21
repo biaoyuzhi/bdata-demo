@@ -18,7 +18,7 @@ object SparkKafkaDemo {
       .set("spark.default.parallelism","6")
     val sc = new SparkContext(conf)
     sc.setLogLevel("ERROR")
-    //todo 如果程序异常退出再重启，kafka中间产生的数据要想正常读取，这里需要先删除checkpointDir文件夹再重启该程序，暂不明原因
+    //todo 如果程序异常退出再重启，kafka中间产生的数据要想正常读取，这里需要先删除checkpointDir文件夹再重启该程序，也可以不删除，但等待的时间比较长，暂时怀疑是测试机的内存太小造成的
     val checkpointDir = "/kafka-checkpoint"
     val ssc = StreamingContext.getOrCreate(checkpointDir,()=>createStreaming(sc,checkpointDir))
     //启动

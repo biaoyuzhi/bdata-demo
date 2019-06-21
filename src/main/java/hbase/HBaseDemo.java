@@ -11,7 +11,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 
 /**
  * Created by wuzh on 2019/6/11.
- * Describe：使用HBase的API操作集群中的HBase表
+ * Describe：使用HBase的API操作集群中的HBase表，根据打jar包方式，配置参数会自动加载resources下的hbase-site.xml文件
  */
 public class HBaseDemo {
     public static void main(String[] args) {
