@@ -63,6 +63,18 @@
             <version>2.1.4</version>
         </dependency>
 
+        <!-- clickhouse官方驱动 -->
+        <dependency>
+            <groupId>ru.yandex.clickhouse</groupId>
+            <artifactId>clickhouse-jdbc</artifactId>
+            <version>0.1.52</version>
+        </dependency>
+        <!-- hive驱动hive-jdbc -->
+        <dependency>
+            <groupId>org.apache.hive</groupId>
+            <artifactId>hive-jdbc</artifactId>
+            <version>3.1.1</version>
+        </dependency>
 
 
         <!--spark依赖包-->
@@ -84,6 +96,12 @@
             <version>2.4.3</version>
         </dependency>
 
+        <!--常用依赖包-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.32</version>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
