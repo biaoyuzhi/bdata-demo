@@ -35,7 +35,7 @@ object SparkKafkaDemo {
     val kafkaParams = Map(
       "bootstrap.servers" -> "192.168.92.60:9092",
       "group.id" -> "test-consumer-group",
-      "enable.auto.commit" -> "true",
+      "enable.auto.commit" -> "true",     //自动提交位移，如果在消息处理完成前就提交了offset，那么就有可能造成数据的丢失，建议设置为false，在消息被完整处理之后再手动提交位移
       "key.deserializer" -> "org.apache.kafka.common.serialization.StringDeserializer",
       "value.deserializer" -> "org.apache.kafka.common.serialization.StringDeserializer"
     )

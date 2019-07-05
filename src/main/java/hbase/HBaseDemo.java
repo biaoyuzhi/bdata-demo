@@ -22,7 +22,7 @@ public class HBaseDemo {
             Connection conn = ConnectionFactory.createConnection(conf);
             //先假设HBase集群中已经create 'emp',{NAME=>'col-family',VERSIONS=>3}，这里直接找到emp表
             TableName name = TableName.valueOf("emp");
-            //连接emp表
+            //连接emp表，这里是插入|更新操作，没有使用conn.getAdmin()的方式，表管理器admin用于建表、删表、修改表定义
             Table emp = conn.getTable(name);
             //设置emp表的row key
             Put put = new Put(Bytes.toBytes("row3"));
