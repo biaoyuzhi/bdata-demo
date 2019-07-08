@@ -1,6 +1,10 @@
 package util;
 
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 /**
  * Created by wuzh on 2019/6/10.
  * Describe：工具类
@@ -73,4 +77,20 @@ public class CommonUtils {
         return num;
     }
 
+    /**
+     * 将指定的内容无限重复的写入指定的文件中，很快产生一个大文件，当文件大小大约3.1G时停止循环
+     *
+     * @param content 被重复写入的文件内容
+     * @param fileName 生成的文件，需带全路径
+     * @throws IOException
+     */
+    public static void writeBigFile(String content,String fileName) throws IOException {
+        FileWriter writer = new FileWriter(fileName);
+        for (;;) {
+            writer.write(content + "\n");
+            if (3276824576L<new File(fileName).length())
+                break;
+        }
+        writer.close();
+    }
 }
