@@ -3,6 +3,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 /**
   * Created by wuzh on 2019/7/8.
   * Describe：读取大文件，再筛选出出现次数前三的单词和出现次数
+  * 如果服务器总内存不足，抛异常：java.lang.IllegalArgumentException: System memory 220987392 must be at least 471859200. Please increase heap size using the --driver-memory option or spark.driver.memory in Spark configuration
   */
 object SparkFileDemo {
   def main(args: Array[String]): Unit = {
