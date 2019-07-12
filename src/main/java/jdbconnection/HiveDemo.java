@@ -10,7 +10,7 @@ public class HiveDemo {
     //原生的JDBC连接
     public static void main(String[] args) throws Exception {
         //注册驱动
-        Class.forName("ru.yandex.clickhouse.ClickHouseDriver");
+        Class.forName("org.apache.hive.jdbc.HiveDriver");
         //创建连接
         Connection conn = DriverManager.getConnection("jdbc:hive2://192.168.92.72:10006/default","ubuntu","");
         //获得Statement对象
