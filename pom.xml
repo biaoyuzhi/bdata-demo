@@ -25,6 +25,7 @@
                 <exclusion> <groupId>org.slf4j</groupId> <artifactId>slf4j-log4j12</artifactId></exclusion>
                 <exclusion> <groupId>log4j</groupId> <artifactId>log4j</artifactId> </exclusion>
                 <exclusion> <groupId>javax.servlet</groupId> <artifactId>servlet-api</artifactId> </exclusion>
+                <exclusion> <groupId>com.fasterxml.jackson.core</groupId> <artifactId>jackson-databind</artifactId> </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -35,6 +36,7 @@
                 <exclusion> <groupId>org.slf4j</groupId> <artifactId>slf4j-log4j12</artifactId></exclusion>
                 <exclusion> <groupId>log4j</groupId> <artifactId>log4j</artifactId> </exclusion>
                 <exclusion> <groupId>javax.servlet</groupId> <artifactId>servlet-api</artifactId> </exclusion>
+                <exclusion> <groupId>com.fasterxml.jackson.core</groupId> <artifactId>jackson-databind</artifactId> </exclusion>
             </exclusions>
         </dependency>
 
@@ -55,12 +57,18 @@
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase-client</artifactId>
             <version>2.1.4</version>
+            <exclusions>
+                <exclusion> <groupId>com.fasterxml.jackson.core</groupId> <artifactId>jackson-databind</artifactId> </exclusion>
+            </exclusions>
         </dependency>
         <!-- MR方式将HDFS中的数据插入到HBase表中 -->
         <dependency>
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase-mapreduce</artifactId>
             <version>2.1.4</version>
+            <exclusions>
+                <exclusion> <groupId>com.fasterxml.jackson.core</groupId> <artifactId>jackson-databind</artifactId> </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- clickhouse官方驱动 -->
@@ -68,6 +76,9 @@
             <groupId>ru.yandex.clickhouse</groupId>
             <artifactId>clickhouse-jdbc</artifactId>
             <version>0.1.52</version>
+            <exclusions>
+                <exclusion> <groupId>com.fasterxml.jackson.core</groupId> <artifactId>jackson-databind</artifactId> </exclusion>
+            </exclusions>
         </dependency>
         <!-- hive驱动hive-jdbc -->
         <dependency>
@@ -77,7 +88,7 @@
         </dependency>
 
 
-        <!--spark依赖包-->
+        <!--spark-core依赖包-->
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.12</artifactId>
@@ -94,6 +105,12 @@
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-streaming_2.12</artifactId>
             <version>2.4.3</version>
+        </dependency>
+        <!--spark-sql依赖包-->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_2.12</artifactId>
+            <version>2.4.2</version>
         </dependency>
 
         <!--常用依赖包-->
