@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+</head>
+<body>
+<!--此项目中的html页面请直接拖到浏览器中打开-->
+    <p>Apple</p>
+    <p>Orage</p>
+    <p>Pear</p>
+    <p>Banana</p>
+
+    <div id="content"></div>
+    <div id="content_bar"></div>
+    <div id="content_arc"></div>
+</body>
+<!--引入D3.js-->
+<script src="http://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+<script>
+    <!--d3.select("body").style("background-color", "black");-->
+    var p = d3.selectAll("p")
+    p.data(["I like dogs","I like cats","I like snakes"])   //标签与数据绑定
+        .text(function(d,i){    //赋予文本值，第一个参数d与前面绑定的数据一一对应，第二个参数i为此次数据的序号。如果不需要使用第二个参数可以不写i，如果需要使用第二个参数，那么第一个参数d即使不用也不能少
+            return d
+        })
+        .exit().remove()        //如果不一致，数组元素个数比p节点少，就删除多余的p节点
+    p.data([14,18,22]).style("font-size", function(d) { return d+"px" })
+
+    <!--画点和线-->
+    d3.select("#content").append("svg").attr("width",500).attr("height",500)        //定义svg标签，并初始化宽和高
+    var gAixs = d3.select("svg").append("g").attr("transform","translate(50,350)")   //利用transform功能来实现文字或图像的旋转、缩放、倾斜、移动这四种类型的变形处理
+    d3.select("g").append("path").attr("d","M 0 0,L 20 -20,S 500 -300 100 -20,L 200 0")   //定义path标签，由点绘制线条
+        .attr("stroke","blue").attr("fill","none")                                  //定义线条的颜色和是否闭合填充阴影部分
+
+    <!--画x/y坐标图-->
+    var xScale = d3.scaleLinear().domain([0,30]).range([0,300])         //用于坐标轴的线性比例尺。domain规定了坐标轴上值的范围。range规定了坐标轴端点的位置
+    var yScale = d3.scaleLinear().domain([20,0]).range([0,300])
+    var xAixs = d3.axisBottom().scale(xScale)                          //定义一个x坐标轴，axisTop时数字位于水平线上侧，axisBottom时数字位于水平线下侧
+    var yAixs = d3.axisLeft().scale(yScale)                            //定义一个y坐标轴，axisLeft时数字位于垂直线左侧，axisRight时数字位于垂直线右侧。
+                    .tickFormat(d3.format("$0.1f"))                    //通过tickFormat()来格式化显示刻度文字，比如增加百分号，或者保留2位小数等
+    //xAixs(gAixs)                                                     //在gAixs中绘制坐标轴。等价于gAixs.call(xAixs)
+    <!--同时绘制x轴和y轴需要2个gAixs对象，否则图形会错乱-->
+    gAixs.call(xAixs)
+    d3.select("svg").append("g").attr("transform","translate(50,50)").call(yAixs)
+</script>
+    <!--画竖直柱状图标-->
+<script>
+    var data = [1,4,7,2,9,13,5,8,2,9]
+    bar_width = 30
+    bar_padding = 10
+    svg_width = (bar_width + bar_padding) * data.length
+    svg_height = 300
+
+    var svg = d3.select("#content_bar").append("svg").attr("width",svg_width).attr("height",svg_height)
+    var bar = svg.selectAll("g").data(data)     //g标签与数据绑定
+                .enter().append("g")            //如果不一致，数组元素个数比g节点多，就插入g节点补足
+                .attr("transform",function(d,i){return "translate(" + i * (bar_width+bar_padding) + ",0)"})
+    var scale = d3.scaleLinear().domain([0,d3.max(data)]).range([svg_height,0])     //用于坐标轴的线性比例尺
+    bar.append("rect").attr("height",function(d){return svg_height-scale(d)}).attr("width",bar_width).attr("y",function(d){return scale(d)}).attr("fill","steelblue")   //定义柱状图
+    bar.append("text").text(function(d){return d}).attr("y",function(d){return scale(d)}).attr("x",bar_width/2).attr("text-anchor","middle").attr("dy",15)           //标注数字
+</script>
+    <!--画饼状图-->
+<script>
+    var data = [{
+        name:"大专及以上",
+        value:11964
+        },
+        {
+        name:"高中和中专",
+        value:18799
+        },
+        {
+        name:"初中及以下",
+        value:51966
+        }]
+    svg_width = 400
+    svg_height = 400
+    var svg = d3.select("#content_arc").append("svg").attr("width",svg_width).attr("height",svg_height)
+    var g = svg.append("g").attr("transform","translate(200,200)")
+    <!--创建弧生成器-->
+    var arc = d3.arc().innerRadius(50)              //內圆半径
+                .outerRadius(200)                   //外圆半径
+                <!--.startAngle(0)                      //获取或设置起始角度访问器-->
+                <!--.endAngle(120 * Math.PI/180)        //获取或设置结束角度访问器-->
+    <!--g.append("path").attr("d",arc)-->
+
+    var pie = d3.pie().value(function(d){return d.value})   //定义获取data中整数value值的方法
+    var color = d3.scaleOrdinal(d3.schemeCategory10)        //定义Category10颜色系
+    g.selectAll("path").data(pie(data)).enter().append("path")  //创建path标签并绑定数据
+      .attr("d",arc)                                            //生成饼图
+      .attr("fill",function(d,i){return color(i)})              //填充颜色
+
+    g.selectAll("text").data(pie(data)).enter().append("text")
+      .text(function(d){return d.data.name})                    //标注data中的name值
+      .attr("transform",function(d){return "translate(" + arc.centroid(d) + ")"})   //移动标注值的位置
+      .attr("text-anchor","middle")                 //居中
+</script>
+</html>
