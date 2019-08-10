@@ -14,9 +14,11 @@
     <div id="content"></div>
     <div id="content_bar"></div>
     <div id="content_arc"></div>
+    <div id="content_map"></div>
 </body>
 <!--引入D3.js-->
-<script src="http://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+<!--<script src="http://d3js.org/d3.v5.min.js" charset="utf-8"></script>-->
+<script src="d3.v5.min.js" charset="UTF-8"></script>
 <script>
     <!--d3.select("body").style("background-color", "black");-->
     var p = d3.selectAll("p")
@@ -29,7 +31,7 @@
 
     <!--画点和线-->
     d3.select("#content").append("svg").attr("width",500).attr("height",500)        //定义svg标签，并初始化宽和高
-    var gAixs = d3.select("svg").append("g").attr("transform","translate(50,350)")   //利用transform功能来实现文字或图像的旋转、缩放、倾斜、移动这四种类型的变形处理
+    var gAixs = d3.select("svg").append("g").attr("transform","translate(50,350)")   //利用transform功能来实现文字或图像的旋转、缩放、倾斜、移动这四种类型的变形处理，只用其一，不能同时生效(后面的设置会覆盖前面的设置)
     d3.select("g").append("path").attr("d","M 0 0,L 20 -20,S 500 -300 100 -20,L 200 0")   //定义path标签，由点绘制线条
         .attr("stroke","blue").attr("fill","none")                                  //定义线条的颜色和是否闭合填充阴影部分
 
@@ -95,5 +97,20 @@
       .text(function(d){return d.data.name})                    //标注data中的name值
       .attr("transform",function(d){return "translate(" + arc.centroid(d) + ")"})   //移动标注值的位置
       .attr("text-anchor","middle")                 //居中
+</script>
+    <!--画中国地图，chinaPaths.js中是自定义的坐标等相关数据-->
+<script src="chinaPaths.js" charset="UTF-8"></script>
+<script>
+    var svg = d3.select("#content_map").append("svg").attr("width",500).attr("height",400)
+    var g = svg.append("g").attr("transform","scale(0.7,0.7)")         //transform:scale(x,y)为水平方向和垂直方向均缩放指定比例
+    var color = d3.scaleOrdinal(d3.schemeCategory10)                   //定义Category10颜色系
+    <!--设置path标签，画出中国地图全貌-->
+    g.selectAll("path").data(chinaPaths).enter().append("path")
+     .attr("d",function(d){return d.d})
+     .attr("fill",function(d,i){return color(i)})       //填充颜色
+    <!--设置text标签，标注省份名称，注意：text标签需放在g标签中，而不是path标签中-->
+    g.selectAll("text").data(chinaPaths).enter().append("text").text(function(d){return d.n})
+     .attr("transform",function(d){return "translate(" + d.p[0] + "," + d.p[1] + ")"})   //移动标注值的位置，大部分取每个省份的起点位置
+     .attr("font-size","12px")
 </script>
 </html>
