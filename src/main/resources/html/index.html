@@ -89,9 +89,17 @@
 
     var pie = d3.pie().value(function(d){return d.value})   //定义获取data中整数value值的方法
     var color = d3.scaleOrdinal(d3.schemeCategory10)        //定义Category10颜色系
+    var currentColor
     g.selectAll("path").data(pie(data)).enter().append("path")  //创建path标签并绑定数据
       .attr("d",arc)                                            //生成饼图
       .attr("fill",function(d,i){return color(i)})              //填充颜色
+      .on("mouseover",function(){                   //鼠标移到某元素上触发事件
+        currentColor = d3.select(this).attr("fill")             //保存该元素当前的颜色
+        return d3.select(this).attr("fill","red")               //填充指定的颜色
+      })
+      .on("mouseout",function(){                    //鼠标从某元素移开触发事件
+        return d3.select(this).attr("fill",currentColor)       //填充回该元素原来的颜色
+      })
 
     g.selectAll("text").data(pie(data)).enter().append("text")
       .text(function(d){return d.data.name})                    //标注data中的name值
@@ -105,9 +113,17 @@
     var g = svg.append("g").attr("transform","scale(0.7,0.7)")         //transform:scale(x,y)为水平方向和垂直方向均缩放指定比例
     var color = d3.scaleOrdinal(d3.schemeCategory10)                   //定义Category10颜色系
     <!--设置path标签，画出中国地图全貌-->
+    var currentColor
     g.selectAll("path").data(chinaPaths).enter().append("path")
      .attr("d",function(d){return d.d})
      .attr("fill",function(d,i){return color(i)})       //填充颜色
+     .on("mouseover",function(){                   //鼠标移到某元素上触发事件
+        currentColor = d3.select(this).attr("fill")             //保存该元素当前的颜色
+        return d3.select(this).attr("fill","red")               //填充指定的颜色
+      })
+      .on("mouseout",function(){                    //鼠标从某元素移开触发事件
+        return d3.select(this).attr("fill",currentColor)       //填充回该元素原来的颜色
+      })
     <!--设置text标签，标注省份名称，注意：text标签需放在g标签中，而不是path标签中-->
     g.selectAll("text").data(chinaPaths).enter().append("text").text(function(d){return d.n})
      .attr("transform",function(d){return "translate(" + d.p[0] + "," + d.p[1] + ")"})   //移动标注值的位置，大部分取每个省份的起点位置
