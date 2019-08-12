@@ -12,7 +12,8 @@
     <p>Banana</p>
 
     <div id="content"></div>
-    <div id="content_bar"></div>
+    <div id="content_line"></div>
+    <div id="content_bar"></div><div id="content_bar_axis"></div>
     <div id="content_arc"></div>
     <div id="content_map"></div>
 </body>
@@ -30,23 +31,25 @@
     p.data([14,18,22]).style("font-size", function(d) { return d+"px" })
 
     <!--画点和线-->
-    d3.select("#content").append("svg").attr("width",500).attr("height",500)        //定义svg标签，并初始化宽和高
-    var gAixs = d3.select("svg").append("g").attr("transform","translate(50,350)")   //利用transform功能来实现文字或图像的旋转、缩放、倾斜、移动这四种类型的变形处理，只用其一，不能同时生效(后面的设置会覆盖前面的设置)
-    d3.select("g").append("path").attr("d","M 0 0,L 20 -20,S 500 -300 100 -20,L 200 0")   //定义path标签，由点绘制线条
-        .attr("stroke","blue").attr("fill","none")                                  //定义线条的颜色和是否闭合填充阴影部分
+    var svg = d3.select("#content").append("svg").attr("width",400).attr("height",400)        //定义svg标签，并初始化宽和高
+    var g = svg.append("g").attr("transform","translate(50,350)")           //定义g标签，利用transform功能来实现文字或图像的旋转、缩放、倾斜、移动这四种类型的变形处理，只用其一，不能同时生效(后面的设置会覆盖前面的设置)
+    g.append("path").attr("d","M 0 0,L 20 -20,S 500 -300 100 -20,L 200 0")          //定义path标签，d属性定义点路径，由点绘制线条
+        .attr("stroke","blue").attr("fill","none")                                  //定义线条的颜色和是否填充阴影部分
 
     <!--画x/y坐标图-->
-    var xScale = d3.scaleLinear().domain([0,30]).range([0,300])         //用于坐标轴的线性比例尺。domain规定了坐标轴上值的范围。range规定了坐标轴端点的位置
-    var yScale = d3.scaleLinear().domain([20,0]).range([0,300])
-    var xAixs = d3.axisBottom().scale(xScale)                          //定义一个x坐标轴，axisTop时数字位于水平线上侧，axisBottom时数字位于水平线下侧
-    var yAixs = d3.axisLeft().scale(yScale)                            //定义一个y坐标轴，axisLeft时数字位于垂直线左侧，axisRight时数字位于垂直线右侧。
-                    .tickFormat(d3.format("$0.1f"))                    //通过tickFormat()来格式化显示刻度文字，比如增加百分号，或者保留2位小数等
-    //xAixs(gAixs)                                                     //在gAixs中绘制坐标轴。等价于gAixs.call(xAixs)
-    <!--同时绘制x轴和y轴需要2个gAixs对象，否则图形会错乱-->
-    gAixs.call(xAixs)
-    d3.select("svg").append("g").attr("transform","translate(50,50)").call(yAixs)
+    var xScale = d3.scaleLinear().domain([0,20]).range([0,300])         //用于坐标轴的线性比例尺。domain定义域，规定了坐标轴上值的范围。range定义值域，规定了坐标轴端点的开始和结束位置
+    var yScale = d3.scaleBand().domain(["星期三","星期二","星期一"]).range([0,300])  //序数比例尺
+    var xAxis = d3.axisBottom().scale(xScale)                          //定义一个x坐标轴，axisTop时数字位于水平线上侧，axisBottom时数字位于水平线下侧
+                  .tickFormat(d3.format("$0.1f"))                      //通过tickFormat()来格式化显示刻度文字，比如增加百分号，或者保留2位小数等
+    var yAxis = d3.axisLeft().scale(yScale)                            //定义一个y坐标轴，axisLeft时数字位于垂直线左侧，axisRight时数字位于垂直线右侧。
+    //xAxis(g)                                                         //在g中绘制坐标轴。等价于g.call(xAxis)
+    <!--同时绘制x轴和y轴需要2个g标签，否则图形会错乱-->
+    g.call(xAxis)
+    svg.append("g").attr("transform","translate(50,50)").call(yAxis)
 </script>
     <!--画竖直柱状图标-->
+<!--引入d3-tip.js，只在下面设置tip效果时生效-->
+<script src="https://cdn.bootcss.com/d3-tip/0.9.1/d3-tip.js"></script>
 <script>
     var data = [1,4,7,2,9,13,5,8,2,9]
     bar_width = 30
@@ -55,12 +58,26 @@
     svg_height = 300
 
     var svg = d3.select("#content_bar").append("svg").attr("width",svg_width).attr("height",svg_height)
+    //设置tip
+    var tip = d3.tip().offset([-10, 0]).html(function(d){
+         return "<span style='color:#ffeb3b'>当前值:"+ d +"</span>"
+     })
+    svg.call(tip)           //需要svg引入tip
+
+    //画竖直柱状图
     var bar = svg.selectAll("g").data(data)     //g标签与数据绑定
                 .enter().append("g")            //如果不一致，数组元素个数比g节点多，就插入g节点补足
-                .attr("transform",function(d,i){return "translate(" + i * (bar_width+bar_padding) + ",0)"})
+                .attr("transform",function(d,i){return "translate(" + (i * (bar_width+bar_padding)+5) + ",0)"})     //+5是为了与下面的x轴刻度对齐
     var scale = d3.scaleLinear().domain([0,d3.max(data)]).range([svg_height,0])     //用于坐标轴的线性比例尺
     bar.append("rect").attr("height",function(d){return svg_height-scale(d)}).attr("width",bar_width).attr("y",function(d){return scale(d)}).attr("fill","steelblue")   //定义柱状图
+        .on("mouseover",tip.show).on("mouseout",tip.hide)                           //鼠标移入移出时触发tip效果
     bar.append("text").text(function(d){return d}).attr("y",function(d){return scale(d)}).attr("x",bar_width/2).attr("text-anchor","middle").attr("dy",15)           //标注数字
+
+    //插入x坐标
+    var xScale = d3.scaleBand().domain(["一","二","三","四","五","六","七","八","九","十"]).range([0,400])       //定义取值范围
+    var xAxis = d3.axisBottom().scale(xScale)                                       //定义x轴
+    d3.select("#content_bar_axis").append("svg").attr("width",svg_width).attr("height",20)
+      .append("g").attr("transform","translate(0,0)").call(xAxis)                   //定义svg和g标签，并插入x轴
 </script>
     <!--画饼状图-->
 <script>
@@ -112,7 +129,7 @@
     var svg = d3.select("#content_map").append("svg").attr("width",500).attr("height",400)
     var g = svg.append("g").attr("transform","scale(0.7,0.7)")         //transform:scale(x,y)为水平方向和垂直方向均缩放指定比例
     var color = d3.scaleOrdinal(d3.schemeCategory10)                   //定义Category10颜色系
-    <!--设置path标签，画出中国地图全貌-->
+    <!--设置path标签，画出中国地图概貌-->
     var currentColor
     g.selectAll("path").data(chinaPaths).enter().append("path")
      .attr("d",function(d){return d.d})
@@ -128,5 +145,29 @@
     g.selectAll("text").data(chinaPaths).enter().append("text").text(function(d){return d.n})
      .attr("transform",function(d){return "translate(" + d.p[0] + "," + d.p[1] + ")"})   //移动标注值的位置，大部分取每个省份的起点位置
      .attr("font-size","12px")
+</script>
+    <!--画折线图-->
+<script>
+    //画x/y坐标轴
+    var svg = d3.select("#content_line").append("svg").attr("width",400).attr("height",400)
+    var xScale = d3.scaleBand().domain(["1月","2月","3月","4月","5月","6月","7月","8月"]).range([0,400])
+    var yScale = d3.scaleLinear().domain([0,40]).range([400,0])
+    var xAxis = d3.axisBottom().scale(xScale)
+    var yAxis = d3.axisLeft().scale(yScale)
+    svg.append("g").attr("transform","translate(-1,380)").call(xAxis)
+    svg.append("g").attr("transform","translate(20,5)").call(yAxis)
+    //画折线图
+    var lineData = [10,30,25,12,40,25,18,36]
+    var line = d3.line().x(function(d,i){return 400/lineData.length*(i+0.5)}).y(function(d){return yScale(d)+5})    //设置折线函数
+                 //.curve(d3.curveStep)                                 //设置线条的外形
+    svg.append("path").attr("d",line(lineData)).attr("stroke","red").attr("fill","none")                            //绘制折线路径，注意line(lineData)被path元素本身的d属性调用
+
+    //设置tip
+    var tip = d3.tip().offset([-10, 0]).html(function(d){return d})
+    svg.call(tip)           //需要svg引入tip
+
+    //添加小圆点
+    svg.selectAll("circle").data(lineData).enter().append("circle").attr("cx",function(d,i){return 400/lineData.length*(i+0.5)}).attr("cy",function(d){return yScale(d)+5}).attr("r",5).attr("fill","#09F")
+        .on("mouseover",tip.show).on("mouseout",tip.hide)               //设置鼠标移入移出显示当前值
 </script>
 </html>
