@@ -86,7 +86,19 @@
             <artifactId>hive-jdbc</artifactId>
             <version>3.1.1</version>
         </dependency>
+        <!-- presto驱动presto-jdbc -->
+        <dependency>
+            <groupId>com.facebook.presto</groupId>
+            <artifactId>presto-jdbc</artifactId>
+            <version>0.220</version>
+        </dependency>
 
+        <!-- commons-math3支持各种数学运算，包括向量计算、矩阵运算 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.6.1</version>
+        </dependency>
 
         <!--spark-core依赖包-->
         <dependency>
@@ -113,7 +125,7 @@
             <version>2.4.2</version>
         </dependency>
 
-        <!--typesafe下的config包可以用来读取配置文件，支持多种形式-->
+        <!--typesafe下的config包可以用来读取配置文件，支持多种形式。本项目用于AppParmsUtils.scala中读取配置文件-->
         <dependency>
             <groupId>com.typesafe</groupId>
             <artifactId>config</artifactId>
