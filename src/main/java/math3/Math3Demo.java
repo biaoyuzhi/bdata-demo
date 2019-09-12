@@ -10,6 +10,7 @@ import java.util.Arrays;
  * Describe：依赖为pom.xml中的commons-math3，支持各种数学运算，包括向量计算、矩阵运算
  */
 public class Math3Demo {
+    //矩阵运算。矩阵AB相乘需要满足A的列数 = B的行数，相乘后：结果的行数 = A的行数，结果的列数 = B的列数
     public static void main(String[] args) {
         double arrA[][] = {{3,2,1},{6,5,4}};
         System.out.println("二维数组A为：\t" + Arrays.deepToString(arrA));
